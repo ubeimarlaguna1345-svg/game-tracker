@@ -22,6 +22,7 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
     desarrollador: '',
     imagenPortada: '',
     descripcion: '',
+    horas: 0,
     completado: false,
     fechaCreacion: ''
   })
@@ -39,6 +40,7 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
       desarrollador: game.desarrollador || game.developer || '',
       imagenPortada: game.imagenPortada || game.cover || game.imagen || '',
       descripcion: game.descripcion || game.review || game.descripcion || '',
+      horas: game.horas ?? game.hours ?? 0,
       completado: game.completado ?? game.completed ?? false,
       fechaCreacion: game.fechaCreacion || (game.fechaCreacion instanceof Date ? game.fechaCreacion.toISOString() : '') || ''
     })
@@ -63,6 +65,8 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
     if (!form.desarrollador || form.desarrollador.trim().length < 1) err.desarrollador = 'El desarrollador es requerido.'
     if (!form.imagenPortada || !isValidURL(form.imagenPortada)) err.imagenPortada = 'URL de imagen inválida.'
     if (!form.descripcion || form.descripcion.trim().length < 5) err.descripcion = 'La descripción es demasiado corta.'
+    const hrs = Number(form.horas)
+    if (Number.isNaN(hrs) || hrs < 0 || hrs > 100000) err.horas = 'Horas inválidas.'
     setErrors(err)
     return Object.keys(err).length === 0
   }
@@ -76,6 +80,7 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
       genero: form.genero,
       plataforma: form.plataforma,
       anoLanzamiento: Number(form.anoLanzamiento),
+      horas: Number(form.horas),
       desarrollador: form.desarrollador,
       imagenPortada: form.imagenPortada,
       descripcion: form.descripcion,
@@ -127,6 +132,10 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
             <label>Descripción</label>
             <textarea name="descripcion" value={form.descripcion} onChange={handleChange} readOnly={!editable} />
             {errors.descripcion && <div className="field-error">{errors.descripcion}</div>}
+
+            <label>Horas jugadas</label>
+            <input name="horas" type="number" min="0" value={form.horas} onChange={handleChange} readOnly={!editable} />
+            {errors.horas && <div className="field-error">{errors.horas}</div>}
 
             <label>Fecha de creación</label>
             <input name="fechaCreacion" type="date" value={form.fechaCreacion ? new Date(form.fechaCreacion).toISOString().slice(0,10) : ''} onChange={handleChange} readOnly={!editable} />

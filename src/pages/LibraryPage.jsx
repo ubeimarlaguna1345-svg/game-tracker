@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import ActionBar from '../components/ActionBar'
 import GameCard from '../components/GameCard'
 import GameForm from './GameForm'
-import { useState, useEffect } from 'react'
+ 
 
 const sampleGames = [
   {
@@ -126,7 +126,7 @@ const sampleGames = [
     imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/0/0b/MarioKart8BoxArt.jpg',
     rating: 4,
     descripcion: 'Carreras divertidas y perfectas para jugar con amigos y familia.',
-    hours: 20,
+    horas: 20,
     anoLanzamiento: 2017,
     desarrollador: 'Nintendo',
     completado: false,
@@ -140,7 +140,7 @@ const sampleGames = [
     imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/5/51/Overwatch_cover_art.jpg',
     rating: 4,
     descripcion: 'Shooter de héroes con gameplay rápido y enfoque en equipo.',
-    hours: 150,
+    horas: 150,
     anoLanzamiento: 2016,
     desarrollador: 'Blizzard Entertainment',
     completado: false,
@@ -154,7 +154,7 @@ const sampleGames = [
     imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg',
     rating: 3,
     descripcion: 'Ambicioso mundo futurista con una narrativa cinematográfica.',
-    hours: 50,
+    horas: 50,
     anoLanzamiento: 2020,
     desarrollador: 'CD Projekt',
     completado: false,
@@ -168,7 +168,7 @@ const sampleGames = [
     imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/9/9a/Celeste_cover.jpg',
     rating: 5,
     descripcion: 'Plataformas precisas con una historia emotiva y banda sonora excelente.',
-    hours: 12,
+    horas: 12,
     anoLanzamiento: 2018,
     desarrollador: 'Matt Makes Games',
     completado: false,
