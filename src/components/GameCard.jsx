@@ -40,9 +40,18 @@ function Stars({ value = 0, max = 5, onRate, readOnly = true }) {
 }
 
 export default function GameCard({ game, onSelect, onOpen, selected, onRate }) {
+  const id = game._id ?? game.id
+  const titulo = game.titulo ?? game.title ?? 'Sin título'
+  const imagen = game.imagenPortada ?? game.cover ?? '/default-cover.svg'
+  const descripcion = game.descripcion ?? game.review ?? ''
+  const rating = typeof game.rating === 'number' ? game.rating : 0
+  const completed = game.completado ?? game.completed ?? false
+  const ano = game.anoLanzamiento ?? game.year ?? null
+  const horas = game.horas ?? game.hours ?? null
+
   return (
     <article
-      className={"card" + (selected ? ' selected' : '') + (game.completed ? ' completed' : '')}
+      className={"card" + (selected ? ' selected' : '') + (completed ? ' completed' : '')}
       role="button"
       tabIndex={0}
       onClick={() => onSelect && onSelect(game)}
@@ -50,27 +59,28 @@ export default function GameCard({ game, onSelect, onOpen, selected, onRate }) {
     >
       <div className="cover">
         <img
-          src={game.cover}
-          alt={`Portada de ${game.title}`}
+          src={imagen}
+          alt={`Portada de ${titulo}`}
           onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/default-cover.svg' }}
         />
         <button
-          className={"complete-btn" + (game.completed ? ' done' : '')}
-          onClick={(e) => { e.stopPropagation(); if (typeof game.onToggle === 'function') game.onToggle(game) }}
-          aria-label={game.completed ? 'Marcar como no completado' : 'Marcar como completado'}
+          className={"complete-btn" + (completed ? ' done' : '')}
+          onClick={(e) => { e.stopPropagation(); if (typeof game.onToggle === 'function') game.onToggle(id) }}
+          aria-label={completed ? 'Marcar como no completado' : 'Marcar como completado'}
         >
-          {game.completed ? '✓' : '○'}
+          {completed ? '✓' : '○'}
         </button>
-        {game.completed && <span className="completed-badge">Completado</span>}
+        {completed && <span className="completed-badge">Completado</span>}
       </div>
 
       <div className="card-body">
-        <h3 className="game-title">{game.title}</h3>
-        <Stars value={game.rating} onRate={onRate ? (v)=>onRate(v) : null} readOnly={!onRate} />
-        <p className="review">{game.review}</p>
+        <h3 className="game-title">{titulo}</h3>
+        <Stars value={rating} onRate={onRate ? (v) => onRate(id, v) : null} readOnly={!onRate} />
+        <p className="review">{descripcion}</p>
         <div className="meta">
-          <span className="hours">⏱ {game.hours} h</span>
-          <button className="details-btn" onClick={(e)=>{ e.stopPropagation(); onOpen && onOpen(game) }}>Ver detalles</button>
+          {ano ? <span className="year">📅 {ano}</span> : null}
+          {horas ? <span className="hours">⏱ {horas} h</span> : null}
+          <button className="details-btn" onClick={(e) => { e.stopPropagation(); onOpen && onOpen(game) }}>Ver detalles</button>
         </div>
       </div>
     </article>

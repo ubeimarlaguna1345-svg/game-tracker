@@ -3,132 +3,236 @@ import Header from '../components/Header'
 import ActionBar from '../components/ActionBar'
 import GameCard from '../components/GameCard'
 import GameForm from './GameForm'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const sampleGames = [
   {
-    id: 1,
-    title: 'The Witcher 3: Wild Hunt',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg',
+    _id: 'g1',
+    titulo: 'The Witcher 3: Wild Hunt',
+    genero: 'RPG',
+    plataforma: 'PC, PS4, Xbox One, Nintendo Switch',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg',
     rating: 5,
-    review: 'RPG épico con una narrativa excepcional y un mundo enorme para explorar.',
-    hours: 120
+    descripcion: 'RPG épico con una narrativa excepcional y un mundo enorme para explorar.',
+    horas: 120,
+    anoLanzamiento: 2015,
+    desarrollador: 'CD Projekt',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 2,
-    title: 'Elden Ring',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/8/8a/Elden_Ring_cover.jpg',
+    _id: 'g2',
+    titulo: 'Elden Ring',
+    genero: 'Action RPG',
+    plataforma: 'PC, PS4, PS5, Xbox One, Xbox Series X/S',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/8/8a/Elden_Ring_cover.jpg',
     rating: 5,
-    review: 'Desafiante, atmosférico y repleto de secretos por descubrir.',
-    hours: 90
+    descripcion: 'Desafiante, atmosférico y repleto de secretos por descubrir.',
+    horas: 90,
+    anoLanzamiento: 2022,
+    desarrollador: 'FromSoftware',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 3,
-    title: 'Hollow Knight',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/3/39/Hollow_Knight_cover.png',
+    _id: 'g3',
+    titulo: 'Hollow Knight',
+    genero: 'Metroidvania',
+    plataforma: 'PC, Nintendo Switch, PS4, Xbox One',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/3/39/Hollow_Knight_cover.png',
     rating: 5,
-    review: 'Metroidvania hermoso y difícil con un diseño de niveles sobresaliente.',
-    hours: 60
+    descripcion: 'Metroidvania hermoso y difícil con un diseño de niveles sobresaliente.',
+    horas: 60,
+    anoLanzamiento: 2017,
+    desarrollador: 'Team Cherry',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 4,
-    title: 'Stardew Valley',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/8/83/Stardew_Valley_cover.jpg',
+    _id: 'g4',
+    titulo: 'Stardew Valley',
+    genero: 'Simulación / RPG',
+    plataforma: 'PC, Nintendo Switch, PS4, PS5, Xbox One, Mobile',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/8/83/Stardew_Valley_cover.jpg',
     rating: 5,
-    review: 'Simulador de granja relajante y adictivo con mucho contenido.',
-    hours: 80
+    descripcion: 'Simulador de granja relajante y adictivo con mucho contenido.',
+    horas: 80,
+    anoLanzamiento: 2016,
+    desarrollador: 'ConcernedApe',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 5,
-    title: 'Minecraft',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png',
+    _id: 'g5',
+    titulo: 'Minecraft',
+    genero: 'Sandbox / Supervivencia',
+    plataforma: 'PC, Consolas, Mobile',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png',
     rating: 4,
-    review: 'Construcción y exploración sin límites; ideal para creativos.',
-    hours: 200
+    descripcion: 'Construcción y exploración sin límites; ideal para creativos.',
+    horas: 200,
+    anoLanzamiento: 2011,
+    desarrollador: 'Mojang',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 6,
-    title: 'Grand Theft Auto V',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_V.png',
+    _id: 'g6',
+    titulo: 'Grand Theft Auto V',
+    genero: 'Mundo abierto / Acción',
+    plataforma: 'PC, PS4, PS5, Xbox One, Xbox Series X/S',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_V.png',
     rating: 4,
-    review: 'Mundo abierto con historia y multijugador muy activo.',
-    hours: 70
+    descripcion: 'Mundo abierto con historia y multijugador muy activo.',
+    horas: 70,
+    anoLanzamiento: 2013,
+    desarrollador: 'Rockstar North',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 7,
-    title: 'Red Dead Redemption 2',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/4/44/Red_Dead_Redemption_II.jpg',
+    _id: 'g7',
+    titulo: 'Red Dead Redemption 2',
+    genero: 'Acción/Aventura',
+    plataforma: 'PS4, Xbox One, PC',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/4/44/Red_Dead_Redemption_II.jpg',
     rating: 5,
-    review: 'Excelente narrativa y ambientación en el oeste americano.',
-    hours: 100
+    descripcion: 'Excelente narrativa y ambientación en el oeste americano.',
+    horas: 100,
+    anoLanzamiento: 2018,
+    desarrollador: 'Rockstar Games',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 8,
-    title: 'The Legend of Zelda: Breath of the Wild',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/0/0b/The_Legend_of_Zelda_Breath_of_the_Wild.jpg',
+    _id: 'g8',
+    titulo: 'The Legend of Zelda: Breath of the Wild',
+    genero: 'Aventura / Mundo abierto',
+    plataforma: 'Nintendo Switch',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/0/0b/The_Legend_of_Zelda_Breath_of_the_Wild.jpg',
     rating: 5,
-    review: 'Exploración libre en un mundo abierto magnífico y creativo.',
-    hours: 85
+    descripcion: 'Exploración libre en un mundo abierto magnífico y creativo.',
+    horas: 85,
+    anoLanzamiento: 2017,
+    desarrollador: 'Nintendo',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 9,
-    title: 'Mario Kart 8 Deluxe',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/0/0b/MarioKart8BoxArt.jpg',
+    _id: 'g9',
+    titulo: 'Mario Kart 8 Deluxe',
+    genero: 'Carreras',
+    plataforma: 'Nintendo Switch',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/0/0b/MarioKart8BoxArt.jpg',
     rating: 4,
-    review: 'Carreras divertidas y perfectas para jugar con amigos y familia.',
-    hours: 20
+    descripcion: 'Carreras divertidas y perfectas para jugar con amigos y familia.',
+    hours: 20,
+    anoLanzamiento: 2017,
+    desarrollador: 'Nintendo',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 10,
-    title: 'Overwatch',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/5/51/Overwatch_cover_art.jpg',
+    _id: 'g10',
+    titulo: 'Overwatch',
+    genero: 'Shooter de héroes',
+    plataforma: 'PC, Consolas',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/5/51/Overwatch_cover_art.jpg',
     rating: 4,
-    review: 'Shooter de héroes con gameplay rápido y enfoque en equipo.',
-    hours: 150
+    descripcion: 'Shooter de héroes con gameplay rápido y enfoque en equipo.',
+    hours: 150,
+    anoLanzamiento: 2016,
+    desarrollador: 'Blizzard Entertainment',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 11,
-    title: 'Cyberpunk 2077',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg',
+    _id: 'g11',
+    titulo: 'Cyberpunk 2077',
+    genero: 'RPG',
+    plataforma: 'PC, PS4, PS5, Xbox One, Xbox Series X/S',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg',
     rating: 3,
-    review: 'Ambicioso mundo futurista con una narrativa cinematográfica.',
-    hours: 50
+    descripcion: 'Ambicioso mundo futurista con una narrativa cinematográfica.',
+    hours: 50,
+    anoLanzamiento: 2020,
+    desarrollador: 'CD Projekt',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   },
   {
-    id: 12,
-    title: 'Celeste',
-    cover: 'https://upload.wikimedia.org/wikipedia/en/9/9a/Celeste_cover.jpg',
+    _id: 'g12',
+    titulo: 'Celeste',
+    genero: 'Plataformas',
+    plataforma: 'PC, Nintendo Switch, PS4, Xbox One',
+    imagenPortada: 'https://upload.wikimedia.org/wikipedia/en/9/9a/Celeste_cover.jpg',
     rating: 5,
-    review: 'Plataformas precisas con una historia emotiva y banda sonora excelente.',
-    hours: 12
+    descripcion: 'Plataformas precisas con una historia emotiva y banda sonora excelente.',
+    hours: 12,
+    anoLanzamiento: 2018,
+    desarrollador: 'Matt Makes Games',
+    completado: false,
+    fechaCreacion: new Date().toISOString()
   }
 ]
+
+const STORAGE_KEY = 'game-tracker:games'
 
 export default function LibraryPage() {
   const [selectedGame, setSelectedGame] = useState(null)
   const [games, setGames] = useState(sampleGames)
   const [selectedId, setSelectedId] = useState(null)
 
+  // Load saved games from localStorage on mount (fallback to sampleGames)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed) && parsed.length) {
+          setGames(parsed)
+        }
+      }
+    } catch (err) {
+      // ignore and keep sampleGames
+      // eslint-disable-next-line no-console
+      console.error('Failed to load games from localStorage', err)
+    }
+  }, [])
+
+  // Persist games to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(games))
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to save games to localStorage', err)
+    }
+  }, [games])
+
+  const getId = (g) => (g && (g._id ?? g.id))
+
   function handleAdd() {
     // open form with an empty game object in editable mode
-    setSelectedGame({ id: null, title: '', cover: '', rating: 0, review: '', hours: 0, completed: false, _isNew: true })
+    setSelectedGame({ _id: null, titulo: '', imagenPortada: '', rating: 0, descripcion: '', horas: 0, completado: false, _isNew: true })
   }
 
   function handleSave(game) {
-    if (game.id == null) {
-      // new game: assign id
-      const maxId = games.reduce((m, g) => Math.max(m, g.id || 0), 0)
-      const newGame = { ...game, id: maxId + 1 }
+    const incomingId = game._id ?? game.id
+    if (!incomingId) {
+      // new game: assign a simple unique _id (string)
+      const newId = String(Date.now())
+      const newGame = { ...game, _id: newId }
       setGames(prev => [newGame, ...prev])
     } else {
-      // update existing
-      setGames(prev => prev.map(g => (g.id === game.id ? game : g)))
+      // update existing - match by _id or id
+      setGames(prev => prev.map(g => ((getId(g) === incomingId) ? { ...g, ...game } : g)))
     }
     setSelectedGame(null)
   }
 
   function handleSelect(game) {
-    setSelectedId(game.id)
+    setSelectedId(getId(game))
   }
 
   function handleOpen(game) {
@@ -136,7 +240,7 @@ export default function LibraryPage() {
   }
 
   function handleEditAction() {
-    const g = games.find(x => x.id === selectedId)
+    const g = games.find(x => getId(x) === selectedId)
     if (!g) {
       // user hasn't selected a game
       alert('Selecciona primero una tarjeta para editar (haz click sobre la tarjeta).')
@@ -146,7 +250,7 @@ export default function LibraryPage() {
   }
 
   function handleToggleCompleteById(id) {
-    setGames(prev => prev.map(g => (g.id === id ? { ...g, completed: !g.completed } : g)))
+    setGames(prev => prev.map(g => (getId(g) === id ? { ...g, completado: !(g.completado ?? g.completed ?? false) } : g)))
   }
 
   function handleMarkCompleteAction() {
@@ -154,12 +258,12 @@ export default function LibraryPage() {
       handleToggleCompleteById(selectedId)
     } else {
       // mark all as completed
-      setGames(prev => prev.map(g => ({ ...g, completed: true })))
+      setGames(prev => prev.map(g => ({ ...g, completado: true })))
     }
   }
   
   function handleRate(id, value) {
-    setGames(prev => prev.map(g => (g.id === id ? { ...g, rating: value } : g)))
+    setGames(prev => prev.map(g => (getId(g) === id ? { ...g, rating: value } : g)))
   }
 
   if (selectedGame) {
@@ -180,16 +284,19 @@ export default function LibraryPage() {
 
       <main className="library-main container">
         <section className="grid">
-          {games.map(game => (
-            <GameCard
-              key={game.id}
-              game={{ ...game, onToggle: () => handleToggleCompleteById(game.id) }}
-              onSelect={handleSelect}
-              onOpen={handleOpen}
-              selected={selectedId === game.id}
-              onRate={(value) => handleRate(game.id, value)}
-            />
-          ))}
+          {games.map(game => {
+            const id = getId(game)
+            return (
+              <GameCard
+                key={id}
+                game={{ ...game, onToggle: (gid) => handleToggleCompleteById(gid) }}
+                onSelect={handleSelect}
+                onOpen={handleOpen}
+                selected={selectedId === id}
+                onRate={(gid, value) => handleRate(gid, value)}
+              />
+            )
+          })}
         </section>
       </main>
     </div>
