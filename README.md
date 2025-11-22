@@ -10,4 +10,5 @@ npm install
 npm run dev
 ```
 
-Si quieres que lo coloque en una subcarpeta en lugar de usar la raíz, dímelo.
+
+
