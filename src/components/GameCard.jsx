@@ -1,5 +1,7 @@
 import React from 'react'
 
+const DEFAULT_COVER = import.meta.env.BASE_URL + 'default-cover.svg'
+
 function Stars({ value = 0, max = 5, onRate, readOnly = true }) {
   const stars = []
   for (let i = 1; i <= max; i++) {
@@ -42,7 +44,7 @@ function Stars({ value = 0, max = 5, onRate, readOnly = true }) {
 export default function GameCard({ game, onSelect, onOpen, selected, onRate }) {
   const id = game._id ?? game.id
   const titulo = game.titulo ?? game.title ?? 'Sin título'
-  const imagen = game.imagenPortada ?? game.cover ?? '/default-cover.svg'
+  const imagen = game.imagenPortada ?? game.cover ?? DEFAULT_COVER
   const descripcion = game.descripcion ?? game.review ?? ''
   const rating = typeof game.rating === 'number' ? game.rating : 0
   const completed = game.completado ?? game.completed ?? false
@@ -61,7 +63,7 @@ export default function GameCard({ game, onSelect, onOpen, selected, onRate }) {
         <img
           src={imagen}
           alt={`Portada de ${titulo}`}
-          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/default-cover.svg' }}
+          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = DEFAULT_COVER }}
         />
         <button
           className={"complete-btn" + (completed ? ' done' : '')}

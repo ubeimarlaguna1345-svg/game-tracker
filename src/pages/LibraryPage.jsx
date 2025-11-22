@@ -4,6 +4,7 @@ import ActionBar from '../components/ActionBar'
 import GameCard from '../components/GameCard'
 import GameForm from './GameForm'
 import ReviewList from '../components/ReviewList'
+import EstadisticasPersonales from './EstadisticasPersonales'
  
 
 const sampleGames = [
@@ -255,6 +256,7 @@ export default function LibraryPage() {
   const [games, setGames] = useState(sampleGames)
   const [reviews, setReviews] = useState(sampleReviews)
   const [selectedId, setSelectedId] = useState(null)
+  const [viewMode, setViewMode] = useState('library') // 'library' | 'stats'
 
   // Load saved games from localStorage on mount (fallback to sampleGames)
   useEffect(() => {
@@ -400,10 +402,21 @@ export default function LibraryPage() {
     )
   }
 
+  if (viewMode === 'stats') {
+    return (
+      <div className="library-root">
+        <Header />
+        <main className="library-main container">
+          <EstadisticasPersonales games={games} reviews={reviews} onBack={() => setViewMode('library')} />
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="library-root">
       <Header />
-      <ActionBar onAdd={handleAdd} onEdit={handleEditAction} onMarkComplete={handleMarkCompleteAction} />
+      <ActionBar onAdd={handleAdd} onEdit={handleEditAction} onMarkComplete={handleMarkCompleteAction} onStats={() => setViewMode('stats')} />
 
       <main className="library-main container">
         <section className="grid">

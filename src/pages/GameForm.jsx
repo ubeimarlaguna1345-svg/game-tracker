@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
+const DEFAULT_COVER = import.meta.env.BASE_URL + 'default-cover.svg'
+
 // Validation helper
 function isValidURL(str) {
   try {
@@ -97,7 +99,7 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
 
         <div className="form-inner">
           <div className="cover-preview">
-            <img src={form.imagenPortada || '/default-cover.svg'} alt={`Portada de ${form.titulo}`} />
+            <img src={form.imagenPortada || DEFAULT_COVER} alt={`Portada de ${form.titulo}`} />
           </div>
 
           <form className="game-form" onSubmit={handleSubmit}>
