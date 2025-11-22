@@ -21,9 +21,15 @@ function Stars({ value = 0, max = 5 }) {
   return <div className="stars">{stars}</div>
 }
 
-export default function GameCard({ game }) {
+export default function GameCard({ game, onSelect }) {
   return (
-    <article className="card">
+    <article
+      className="card"
+      role="button"
+      tabIndex={0}
+      onClick={() => onSelect && onSelect(game)}
+      onKeyDown={(e) => { if (e.key === 'Enter') onSelect && onSelect(game) }}
+    >
       <div className="cover">
         <img src={game.cover} alt={`Portada de ${game.title}`} />
       </div>
@@ -34,7 +40,7 @@ export default function GameCard({ game }) {
         <p className="review">{game.review}</p>
         <div className="meta">
           <span className="hours">⏱ {game.hours} h</span>
-          <button className="details-btn">Ver detalles</button>
+          <button className="details-btn" onClick={(e)=>{ e.stopPropagation(); onSelect && onSelect(game) }}>Ver detalles</button>
         </div>
       </div>
     </article>
