@@ -107,10 +107,11 @@ const sampleGames = [
 export default function LibraryPage() {
   const [selectedGame, setSelectedGame] = useState(null)
   const [games, setGames] = useState(sampleGames)
+  const [selectedId, setSelectedId] = useState(null)
 
   function handleAdd() {
     // open form with an empty game object in editable mode
-    setSelectedGame({ id: null, title: '', cover: '', rating: 0, review: '', hours: 0, _isNew: true })
+    setSelectedGame({ id: null, title: '', cover: '', rating: 0, review: '', hours: 0, completed: false, _isNew: true })
   }
 
   function handleSave(game) {
@@ -124,6 +125,41 @@ export default function LibraryPage() {
       setGames(prev => prev.map(g => (g.id === game.id ? game : g)))
     }
     setSelectedGame(null)
+  }
+
+  function handleSelect(game) {
+    setSelectedId(game.id)
+  }
+
+  function handleOpen(game) {
+    setSelectedGame(game)
+  }
+
+  function handleEditAction() {
+    const g = games.find(x => x.id === selectedId)
+    if (!g) {
+      // user hasn't selected a game
+      alert('Selecciona primero una tarjeta para editar (haz click sobre la tarjeta).')
+      return
+    }
+    handleOpen(g)
+  }
+
+  function handleToggleCompleteById(id) {
+    setGames(prev => prev.map(g => (g.id === id ? { ...g, completed: !g.completed } : g)))
+  }
+
+  function handleMarkCompleteAction() {
+    if (selectedId) {
+      handleToggleCompleteById(selectedId)
+    } else {
+      // mark all as completed
+      setGames(prev => prev.map(g => ({ ...g, completed: true })))
+    }
+  }
+  
+  function handleRate(id, value) {
+    setGames(prev => prev.map(g => (g.id === id ? { ...g, rating: value } : g)))
   }
 
   if (selectedGame) {
@@ -140,12 +176,19 @@ export default function LibraryPage() {
   return (
     <div className="library-root">
       <Header />
-      <ActionBar onAdd={handleAdd} />
+      <ActionBar onAdd={handleAdd} onEdit={handleEditAction} onMarkComplete={handleMarkCompleteAction} />
 
       <main className="library-main container">
         <section className="grid">
           {games.map(game => (
-            <GameCard key={game.id} game={game} onSelect={(g)=>setSelectedGame(g)} />
+            <GameCard
+              key={game.id}
+              game={{ ...game, onToggle: () => handleToggleCompleteById(game.id) }}
+              onSelect={handleSelect}
+              onOpen={handleOpen}
+              selected={selectedId === game.id}
+              onRate={(value) => handleRate(game.id, value)}
+            />
           ))}
         </section>
       </main>

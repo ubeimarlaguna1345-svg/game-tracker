@@ -69,6 +69,14 @@ body{
 }
 .card:hover{transform:translateY(-8px); box-shadow:0 18px 40px rgba(2,6,23,0.7)}
 
+.card.selected{outline: 2px solid rgba(110,231,183,0.16); box-shadow:0 22px 48px rgba(2,6,23,0.75); transform:translateY(-6px)}
+
+.card.completed{opacity:0.7; filter:grayscale(.15); border-color: rgba(110,231,183,0.08)}
+.completed-badge{position:absolute; top:10px; left:10px; background:rgba(6,50,44,0.9); color:var(--accent); padding:6px 8px; border-radius:6px; font-weight:700; font-size:0.8rem}
+.cover{position:relative}
+.complete-btn{position:absolute; right:8px; top:8px; background:rgba(0,0,0,0.35); color:var(--accent); border:none; padding:6px 8px; border-radius:8px; cursor:pointer}
+.complete-btn.done{background:var(--accent); color:#06221a}
+
 .cover img{display:block; width:100%; height:140px; object-fit:cover}
 
 .card-body{padding:12px 14px; display:flex; flex-direction:column; gap:8px}
@@ -76,6 +84,9 @@ body{
 .stars{display:flex; gap:4px; color: #ffd166}
 .star{opacity:0.3}
 .star.on{opacity:1; color:#ffd166}
+.star-btn{background:transparent; border:none; padding:0; margin:0; cursor:pointer}
+.star-btn:focus{outline:2px solid rgba(110,231,183,0.18); border-radius:6px}
+.star-btn:hover .star, .star-btn:hover svg{transform:scale(1.07)}
 .review{margin:0; color:var(--muted); font-size:0.92rem; min-height:40px}
 .meta{display:flex; justify-content:space-between; align-items:center; margin-top:6px}
 .hours{color:var(--muted); font-size:0.9rem}

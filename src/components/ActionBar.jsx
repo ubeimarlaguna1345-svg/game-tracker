@@ -8,12 +8,12 @@ function ActionButton({ children, onClick }) {
   )
 }
 
-export default function ActionBar({ onAdd }) {
+export default function ActionBar({ onAdd, onEdit, onMarkComplete }) {
   return (
     <div className="actionbar container">
       <ActionButton onClick={onAdd}>Agregar juego</ActionButton>
-      <ActionButton>Editar juego</ActionButton>
-      <ActionButton>Marcar como completado</ActionButton>
+      <ActionButton onClick={onEdit}>Editar juego</ActionButton>
+      <ActionButton onClick={onMarkComplete}>Marcar como completado</ActionButton>
     </div>
   )
 }

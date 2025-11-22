@@ -8,7 +8,8 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
     cover: '',
     rating: 0,
     review: '',
-    hours: 0
+    hours: 0,
+    completed: false
   })
 
   useEffect(() => {
@@ -17,13 +18,18 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
       cover: game.cover || '',
       rating: game.rating ?? 0,
       review: game.review || '',
-      hours: game.hours ?? 0
+      hours: game.hours ?? 0,
+      completed: game.completed ?? false
     })
   }, [game])
 
   function handleChange(e) {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: name === 'rating' || name === 'hours' ? Number(value) : value }))
+    const { name, value, type, checked } = e.target
+    let next
+    if (name === 'rating' || name === 'hours') next = Number(value)
+    else if (type === 'checkbox') next = Boolean(checked)
+    else next = value
+    setForm(prev => ({ ...prev, [name]: next }))
   }
 
   function handleSubmit(e) {
@@ -45,6 +51,10 @@ export default function GameForm({ game, onBack, onSave, editable = false }) {
           </div>
 
           <form className="game-form" onSubmit={handleSubmit}>
+            <label>
+              <input name="completed" type="checkbox" checked={form.completed} onChange={handleChange} disabled={!editable} /> <strong>Completado</strong>
+            </label>
+
             <label>Nombre del juego</label>
             <input name="title" value={form.title} onChange={handleChange} readOnly={!editable} />
 
