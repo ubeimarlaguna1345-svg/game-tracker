@@ -3,6 +3,7 @@ import Header from '../components/Header'
 import ActionBar from '../components/ActionBar'
 import GameCard from '../components/GameCard'
 import GameForm from './GameForm'
+import ReviewList from '../components/ReviewList'
  
 
 const sampleGames = [
@@ -177,10 +178,82 @@ const sampleGames = [
 ]
 
 const STORAGE_KEY = 'game-tracker:games'
+const STORAGE_REVIEWS = 'game-tracker:reviews'
+
+const sampleReviews = [
+  {
+    _id: 'r1',
+    juegoId: 'g1',
+    puntuacion: 5,
+    textoReseña: 'Increíble, una historia memorable y horas de contenido.',
+    horasJugadas: 120,
+    dificultad: 'Normal',
+    recomendaria: true,
+    fechaCreacion: new Date().toISOString(),
+    fechaActualizacion: new Date().toISOString()
+  },
+  {
+    _id: 'r2',
+    juegoId: 'g3',
+    puntuacion: 4,
+    textoReseña: 'Gran juego de plataformas con buen ritmo, algo difícil en secciones.',
+    horasJugadas: 45,
+    dificultad: 'Difícil',
+    recomendaria: true,
+    fechaCreacion: new Date().toISOString(),
+    fechaActualizacion: new Date().toISOString()
+  }
+  ,
+  {
+    _id: 'r3',
+    juegoId: 'g2',
+    puntuacion: 5,
+    textoReseña: 'Elden Ring ofrece libertad total y combate satisfactorio.',
+    horasJugadas: 90,
+    dificultad: 'Difícil',
+    recomendaria: true,
+    fechaCreacion: new Date().toISOString(),
+    fechaActualizacion: new Date().toISOString()
+  },
+  {
+    _id: 'r4',
+    juegoId: 'g5',
+    puntuacion: 4,
+    textoReseña: 'Minecraft es perfecto para creatividad y construcción casual.',
+    horasJugadas: 200,
+    dificultad: 'Fácil',
+    recomendaria: true,
+    fechaCreacion: new Date().toISOString(),
+    fechaActualizacion: new Date().toISOString()
+  },
+  {
+    _id: 'r5',
+    juegoId: 'g9',
+    puntuacion: 4,
+    textoReseña: 'Mario Kart es ideal para partidas rápidas con amigos.',
+    horasJugadas: 30,
+    dificultad: 'Normal',
+    recomendaria: true,
+    fechaCreacion: new Date().toISOString(),
+    fechaActualizacion: new Date().toISOString()
+  },
+  {
+    _id: 'r6',
+    juegoId: 'g12',
+    puntuacion: 5,
+    textoReseña: 'Celeste es desafiante y emotivo; una joya de plataformas.',
+    horasJugadas: 15,
+    dificultad: 'Difícil',
+    recomendaria: true,
+    fechaCreacion: new Date().toISOString(),
+    fechaActualizacion: new Date().toISOString()
+  }
+]
 
 export default function LibraryPage() {
   const [selectedGame, setSelectedGame] = useState(null)
   const [games, setGames] = useState(sampleGames)
+  const [reviews, setReviews] = useState(sampleReviews)
   const [selectedId, setSelectedId] = useState(null)
 
   // Load saved games from localStorage on mount (fallback to sampleGames)
@@ -209,6 +282,29 @@ export default function LibraryPage() {
       console.error('Failed to save games to localStorage', err)
     }
   }, [games])
+
+  // Load & persist reviews
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_REVIEWS)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed) && parsed.length) setReviews(parsed)
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to load reviews from localStorage', err)
+    }
+  }, [])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_REVIEWS, JSON.stringify(reviews))
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to save reviews to localStorage', err)
+    }
+  }, [reviews])
 
   const getId = (g) => (g && (g._id ?? g.id))
 
@@ -253,6 +349,26 @@ export default function LibraryPage() {
     setGames(prev => prev.map(g => (getId(g) === id ? { ...g, completado: !(g.completado ?? g.completed ?? false) } : g)))
   }
 
+  // Reviews handlers
+  function handleAddReview(review) {
+    const r = {
+      ...review,
+      _id: review._id || `r_${Date.now()}`,
+      fechaCreacion: (review.fechaCreacion && (new Date(review.fechaCreacion)).toISOString()) || new Date().toISOString(),
+      fechaActualizacion: (review.fechaActualizacion && (new Date(review.fechaActualizacion)).toISOString()) || new Date().toISOString()
+    }
+    setReviews(prev => [r, ...prev])
+  }
+
+  function handleEditReview(updated) {
+    const u = { ...updated, fechaActualizacion: new Date().toISOString() }
+    setReviews(prev => prev.map(r => (r._id === u._id ? { ...r, ...u } : r)))
+  }
+
+  function handleDeleteReview(id) {
+    setReviews(prev => prev.filter(r => r._id !== id))
+  }
+
   function handleMarkCompleteAction() {
     if (selectedId) {
       handleToggleCompleteById(selectedId)
@@ -272,6 +388,13 @@ export default function LibraryPage() {
         <Header />
         <main className="library-main container">
           <GameForm game={selectedGame} onBack={() => setSelectedGame(null)} onSave={handleSave} editable={true} />
+          <ReviewList
+            juegoId={getId(selectedGame)}
+            reviews={reviews}
+            onAdd={handleAddReview}
+            onEdit={handleEditReview}
+            onDelete={handleDeleteReview}
+          />
         </main>
       </div>
     )
